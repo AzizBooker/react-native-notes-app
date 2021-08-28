@@ -1,5 +1,7 @@
 import { bold, white } from "ansi-colors";
 import React from "react";
+import ListItem from "../component/ListItem";
+
 import {
   View,
   Text,
@@ -7,61 +9,66 @@ import {
   StyleSheet,
   FlatList,
   SafeAreaView,
+  TouchableWithoutFeedbackBase,
+  Button,
 } from "react-native";
 import NotesData from "../data/DummyData.data";
 import Colors from "../theme/colors.theme";
 
-const HomeScreen = (props) => {
+const HomeScreen = ({ navigation }) => {
+  navigation.setOptions({
+    headerRight: () => (
+      <Button
+        title="Add"
+        onPress={() => {
+          navigation.navigate("Note",{
+            type:'new',
+            id:""
+          });
+        }}
+      />
+    ),
+  });
+
+
+  
   const renderItem = (itemData) => {
-    console.log(itemData.item)
-    console.log(itemData.item.dateLastEdited)
-    return(
-    <View style={styles.itemContainer}>
-      
-      <Text style={styles.itemDate}>{itemData.item.dateLastEdited}</Text>
-      <Text style={styles.itemHeading}>{itemData.item.title}</Text>
-      <Text style={styles.itemText}>{itemData.item.text}</Text>
-    </View>
-    )
+    return <ListItem itemData={itemData} />;
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto"/>
-      <Text>Notes</Text>
+    <View style={styles.container}>
+      <StatusBar style="auto" />
       <FlatList
+      showsVerticalScrollIndicator={false}
         data={NotesData}
         renderItem={renderItem}
         keyExtractor={(itemData) => itemData.id}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop:StatusBar.currentHeight,
-    backgroundColor: "#fff",
+    //marginTop:StatusBar.currentHeight,
+    backgroundColor: Colors.background,
+    flexGrow:1,
     alignItems: "center",
     justifyContent: "center",
   },
-  itemContainer: {
-    display: "flex",
-    marginVertical:10,
-    padding:10,
-    width:300,
-    backgroundColor:Colors.primary
+  topbar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
-  itemHeading:{
-    fontSize:16,
-    color:"#fff",
-
+  title: {
+    textAlign: "center",
+    fontWeight: "600",
+    color: Colors.heading,
+    fontSize: 24,
+    marginVertical: 10,
   },
-  itemText:{
-    fontSize:12
+  button: {
+    paddingVertical: 20,
   },
-  itemDate:{
-    fontSize:10
-  }
 });
